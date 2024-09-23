@@ -1,9 +1,9 @@
 import mysql from "mysql2/promise";
 
 const config = {
-    host:"localhost",
+    host:"mysql-container",
     user:"root",
-    port:5432,
+    port:3306,
     password:"12345",
     database:"todo_list"
 }
