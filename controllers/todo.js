@@ -75,10 +75,10 @@ class TodoController{
     }
 
     static async getTodoById(req, res){
-        const {idUsuario} = req.query;
-        console.log(idUsuario)
+        const {idTarea} = req.query;
+        console.log(idTarea)
         try{
-            const result = await TodoModel.getById({id:idUsuario});
+            const result = await TodoModel.getById({id:idTarea});
             return res.send(result);
         }catch(error){
             return res.status(400).json({error:error.message})
