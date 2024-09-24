@@ -1,31 +1,36 @@
 services:
-  mysql:
+  mysqldb:
     image: mysql:latest
     container_name: mysql-container
     environment:
-      MYSQL_ROOT_PASSWORD: 12345
+      MYSQL_ROOT_PASSWORD: '12345'
     ports:
-      - "5432:3306"  # Cambia el puerto 5432 (host) -> 3306 (contenedor)
+      - "5432:3306"
     volumes:
       - mysql-data:/var/lib/mysql
     networks:
-      - mi_red
+      - mysql-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
-  node-api:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: node-api
-    ports:
-      - "3001:3000"
+  app:
+    build: .
     depends_on:
-      - mysql
+      mysqldb:
+        condition: service_healthy
+    links:
+      - mysqldb
+    ports:    
+      - 3000:3000
     networks:
-      - mi_red
-
-networks:
-  mi_red:
-    driver: bridge
+      - mysql-network
 
 volumes:
   mysql-data:
+
+networks:
+  mysql-network:
+    driver: bridge
